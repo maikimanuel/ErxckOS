@@ -1,0 +1,12 @@
+Third-party notices (not interface branding)
+Legacy security and SysMain scripts adapted from Revision Tool 1.4.6,
+commit 66e9df111929bdf1ce7a6062e67f46a4033d81c2, MeetRevision.
+https://github.com/meetrevision/revision-tool/tree/1.4.6
+Licensed under GNU GPL v3. Source scripts are included in app/Scripts.
+Changes: ErxckOS filenames and backup suffix; no upstream application required.
+The original playbook 23.12 downloaded the latest tool dynamically; these pinned
+scripts are not claimed byte-equivalent to an unspecified downloaded version.
+MinSudo binary is redistributed unmodified under ErxckOS.Elevate.exe.
+The original license is in Elevacion-LICENSE.txt.
+The original ReviOS 23.12 playbook CAB and bundled third-party notices are retained.
+Logo and wallpaper supplied by the user.

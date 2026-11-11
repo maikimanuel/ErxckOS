@@ -1,0 +1,15 @@
+---
+title: Custom
+description: Custom ErxckOS configuration
+privilege: Admin
+actions: []
+features:
+- features\erxckos\start.yml
+- features\erxckos\software.yml
+- features\erxckos\services.yml
+- features\erxckos\components.yml
+- features\erxckos\appx.yml
+- features\erxckos\packages.yml
+- features\erxckos\registry.yml
+- features\erxckos\revert.yml
+- features\erxckos\config.yml

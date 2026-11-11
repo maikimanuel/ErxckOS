@@ -1,0 +1,60 @@
+name: ErxckOS Release
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - name: Verificar etiqueta y version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: powershell
+        run: |
+          $version = (Get-Content VERSION -Raw).Trim()
+          if ($env:GITHUB_REF_NAME -ne "v$version") { throw 'La etiqueta debe coincidir con VERSION.' }
+      - name: Comprobar sintaxis PowerShell
+        shell: powershell
+        run: ./tests/check-syntax.ps1
+      - name: Probar perfiles sin modificar el equipo
+        shell: powershell
+        run: ./tests/device-profile.tests.ps1
+      - name: Pruebas de empaquetado
+        run: python -m unittest discover -s tests -v
+      - name: Empaquetar
+        run: python build.py --repository "${{ github.repository }}" --output dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ErxckOS-build
+          path: dist/*
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ErxckOS-build
+          path: dist
+      - name: Publicar version de prueba
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" dist/* --clobber
+          else
+            gh release create "$RELEASE_TAG" dist/* --verify-tag --prerelease --title "ErxckOS $RELEASE_TAG" --notes "Version de prueba. Incluye perfiles laptop/PC y actualizaciones desde este repositorio. Consulta README y VALIDACION.md. Los ajustes y la interfaz requieren pruebas reales en Windows."
+          fi

@@ -1,0 +1,59 @@
+---
+title: Software
+description: Installs preferred softwares 
+privilege: TrustedInstaller
+actions:
+
+  - !writeStatus: {status: 'Instalando ErxckOS Tool'}
+  - !cmd:
+    exeDir: true
+    command: 'robocopy "ErxckOS Tool" "%ProgramFiles%\ErxckOS Tool" /E /IM /IT /NP & if errorlevel 8 (exit /b 1) else (exit /b 0)'
+  - !run:
+    path: '%ProgramFiles%\ErxckOS Tool\Scripts'
+    exe: 'ErxckOS.Security.Disable.cmd'
+    wait: true
+    weight: 100
+
+  - !powerShell:
+    command: 'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(''https://community.chocolatey.org/install.ps1''))'
+    weight: 50
+
+  # - !writeStatus: {status: "Installing .NET Framework 3.5", option: "dotnet35"}
+  # - !cmd:
+  #   command: '"%ProgramData%\chocolatey\bin\choco.exe" install -y --force --allow-empty-checksums dotnet3.5'
+  #   weight: 150
+  #   option: "dotnet35"
+
+  - !writeStatus: {status: 'Downloading Brave', option: "browser-brave"}
+  - !powerShell: {command: "& { Invoke-WebRequest ((Invoke-RestMethod -Uri 'https://api.github.com/repos/brave/brave-browser/releases/latest' -Method Get | ConvertTo-Json | ConvertFrom-Json).assets | where-object { $_.name -eq 'BraveBrowserStandaloneSetup.exe' }).browser_download_url -OutFile \"$env:TEMP\\BraveBrowserStandaloneSetup.exe\" }" , weight: 150, option: "browser-brave"}
+
+  - !writeStatus: {status: 'Installing Brave', option: "browser-brave"}
+  - !cmd: {command: 'call "%temp%\BraveBrowserStandaloneSetup.exe" /silent /install', runas: currentUserElevated, weight: 50, option: "browser-brave"}
+
+  - !writeStatus: {status: 'Configuring Brave', option: "browser-brave"}
+  - !cmd:
+    exeDir: true
+    command: 'robocopy "BraveSoftware" "%ProgramFiles%\BraveSoftware" /E /IM /IT /NP'
+    weight: 20
+    option: "browser-brave"
+
+  # Firefox
+  - !writeStatus: {status: 'Installing Firefox', option: "browser-firefox"}
+  - !cmd:
+    command: '"%ProgramData%\chocolatey\bin\choco.exe" install -y --force --allow-empty-checksums firefox'
+    weight: 150
+    option: "browser-firefox"
+  - !writeStatus: {status: 'Configuring Firefox', option: "browser-firefox"}
+  - !run: {exe: 'FIREFOX.cmd', exeDir: true, weight: 20, option: "browser-firefox"}
+
+  # - !writeStatus: {status: 'Installing Ungoogled Chromium', option: "browser-ugc"}
+  # - !cmd:
+  #   command: '"%ProgramData%\chocolatey\bin\choco.exe" install -y --force --allow-empty-checksums ungoogled-chromium'
+  #   weight: 150
+  #   option: "browser-ugc"
+
+  # - !writeStatus: {status: 'Installing LibreWolf', option: "browser-librewolf"}
+  # - !cmd:
+  #   command: '"%ProgramData%\chocolatey\bin\choco.exe" install -y --force --allow-empty-checksums librewolf'
+  #   weight: 150
+  #   option: "browser-librewolf"

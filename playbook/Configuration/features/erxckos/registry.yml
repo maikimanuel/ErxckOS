@@ -1,0 +1,47 @@
+---
+title: Registry
+description: ErxckOS registry configuration
+privilege: TrustedInstaller
+actions: 
+  - !writeStatus: {status: "Tweaking registry"}
+features:
+  - features\erxckos\registry\ntlite-settings.yml
+  - features\erxckos\registry\aaa-edit-ISO-version-and-edition.yml
+  - features\erxckos\registry\add-take-ownership-in-context-menu.yml
+  - features\erxckos\registry\bypass-requirements.yml
+  - features\erxckos\registry\configure-crash-control.yml
+  - features\erxckos\registry\configure-deprovisioned-apps.yml
+  - features\erxckos\registry\configure-explorer-folder-view.yml
+  - features\erxckos\registry\configure-explorer-settings.yml
+  - features\erxckos\registry\configure-ifeo.yml
+  - features\erxckos\registry\configure-internet-explorer.yml
+  - features\erxckos\registry\configure-kernel.yml
+  - features\erxckos\registry\configure-logon.yml
+  - features\erxckos\registry\configure-microsoft-store.yml
+  - features\erxckos\registry\configure-multimedia.yml
+  - features\erxckos\registry\configure-oobe.yml
+  - features\erxckos\registry\configure-power-control.yml
+  - features\erxckos\registry\configure-privacy.yml
+  - features\erxckos\registry\configure-search-and-cortana.yml
+  - features\erxckos\registry\configure-security.yml
+  - features\erxckos\registry\configure-start-menu-and-taskbar-notifications).yml
+  - features\erxckos\registry\configure-win32priorityseparation.yml
+  - features\erxckos\registry\configure-windows-settings.yml
+  - features\erxckos\registry\configure-windows-update-and-install.yml
+  # - features\erxckos\registry\disable-disk-defragmentation.yml
+  - features\erxckos\registry\disable-automatic-maintenance.yml
+  - features\erxckos\registry\disable-disk-checking.yml
+  - features\erxckos\registry\disable-ease-of-access-features.yml
+  - features\erxckos\registry\disable-installing-teams.yml
+  - features\erxckos\registry\disable-logging.yml
+  - features\erxckos\registry\disable-prefetcher-superfetch-and-readyboost.yml
+  - features\erxckos\registry\disable-system-restore-pre-defined-config.yml
+  # - features\erxckos\registry\disable-user-account-control-uac.yml
+  - features\erxckos\registry\enable-audio-communications-do-nothing.yml
+  - features\erxckos\registry\fixes.yml
+  - features\erxckos\registry\make-msi-installer-work-in-safe-mode.yml
+  - features\erxckos\registry\mouse-tweaks.yml
+  - features\erxckos\registry\old-rightclick-menu.yml
+  - features\erxckos\registry\restore-windows-photo-viewer-all-users.yml
+  - features\erxckos\registry\erxckos-static-edition.yml
+  - features\erxckos\registry\erxckos-static-oem-information.yml
