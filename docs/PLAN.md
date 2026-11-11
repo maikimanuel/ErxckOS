@@ -8,9 +8,9 @@ Enfoque: PowerShell 5.1/WPF existente, clasificacion explicita de chasis y PCSys
 
 Alternativas: copiar scripts de terceros propagaria cambios de servicios y dispositivos que no necesita esta funcion; usar solo Win32_Battery confundiria UPS con laptops. Se adopta una implementacion propia con pruebas de entradas.
 
-- [ ] Parte 1: documentar evidencia, limites del archivo cifrado y comparacion.
-- [ ] Parte 2: pruebas de clasificacion, plan de bateria conservado, errores y conexion app/playbook; implementar y verificar.
-- [ ] Parte 3: configurar repositorio/version, integrar CI y publicaciones repetibles, construir y publicar prueba 0.3.0; comprobar assets y hashes.
+- [x] Parte 1: documentar evidencia, limites del archivo cifrado y comparacion.
+- [x] Parte 2: pruebas de clasificacion, plan de bateria conservado, errores y conexion app/playbook; implementar y verificar.
+- [x] Parte 3: configurar repositorio/version, integrar CI y publicaciones repetibles, construir y publicar prueba 0.3.0; comprobar assets y hashes. Los dos jobs de Windows/build y publish terminaron correctamente; ambos paquetes descargados coinciden con SHA256SUMS.txt.
 
 Pruebas: tests/device-profile.tests.ps1 con CIM/powercfg sustituidos (sin tocar Windows), analizador PS de todos los scripts y unittest de paquetes. CI repite pruebas en Windows PowerShell 5.1. Riesgos revisados: UPS, bateria retirada, chasis de docking, CIM inaccesible, esquemas no disponibles, publicacion repetida/version distinta a etiqueta.
 

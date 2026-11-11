@@ -21,10 +21,20 @@ Continuar los chats Revisión de ReviOS y Greeting exchange. Revisar y aprovecha
 - CI en main/PR; release por etiqueta vVERSION, hashes y publicacion de prueba repetible.
 - Pruebas locales: 22 comprobaciones PowerShell sin ejecutar tweaks; pruebas Python de empaquetado/integracion y analizador de scripts.
 
+## Publicacion recuperada y continuada (2026-11-11)
+
+- Codigo completo subido a `main`: commit `c5243c69248332e670905fe37cc16f602e332165`.
+- El arbol publicado coincide exactamente con el arbol local verificado: `60aa12d4cd34314e749cf992308bb40a859505f1`.
+- GitHub Actions en Windows termino correctamente en `main`: https://github.com/maikimanuel/ErxckOS/actions/runs/43122835833.
+- Etiqueta y publicacion preliminar creadas: https://github.com/maikimanuel/ErxckOS/releases/tag/v0.3.0.
+- Compilacion de la etiqueta y carga de assets terminadas correctamente: https://github.com/maikimanuel/ErxckOS/actions/runs/43123009659.
+- Assets publicados y descargados de nuevo para verificar sus hashes contra `SHA256SUMS.txt`:
+  - `ErxckOS.apbx`: `37d0e3a4730709bb4d6eaefdf6c1a70d30b64533956297685b5e131a0bf0b376`.
+  - `ErxckOS-Tool.zip`: `61cc1e39dd171cf1c7f8c97b6d4720f764fefb800dbf62c86a7fe2aa1d9ffef0`.
+- El boton de actualizacion abre la pagina de publicaciones; no instala actualizaciones de forma silenciosa.
+
 ## Pendiente al escribir este registro
 
-- Revision final, push a main, verificar ejecucion Windows de Actions y publicar etiqueta v0.3.0.
-- Comprobar assets de GitHub Release y hashes.
 - Prueba real de WPF y aplicacion del playbook en Windows/VM. No declarar estable ni prometer FPS; no se ejecutaron ajustes en el equipo del usuario.
 
 ## Restricciones permanentes
