@@ -65,21 +65,18 @@ actions:
     # Start as user process to prevent weird look due to running as TrustedInstaller
   # - !run: {baseDir: true, exe: "NSudoLC.exe", args: '-U:C -UseCurrentConsole explorer.exe'}
   - !writeStatus: {status: 'Configurando identidad ErxckOS'}
-  - !run:
-    exe: 'PowerShell'
-    args: '-NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Set-ErxckOSIdentity.ps1"'
+  - !cmd:
+    command: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Set-ErxckOSIdentity.ps1"'
     runas: currentUserElevated
     wait: true
 
   # Refresh shortcuts created by versions before the EXE installer.
-  - !run:
-    exe: 'PowerShell'
-    args: '-NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Install-ErxckOSShortcut.ps1"'
+  - !cmd:
+    command: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Install-ErxckOSShortcut.ps1"'
     runas: currentUserElevated
     wait: true
   - !writeStatus: {status: 'Detectando perfil laptop / PC'}
-  - !run:
-    exe: 'PowerShell'
-    args: '-NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Invoke-ErxckOS.ps1" -Action AutoPower'
+  - !cmd:
+    command: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Invoke-ErxckOS.ps1" -Action AutoPower'
     runas: currentUserElevated
     wait: true

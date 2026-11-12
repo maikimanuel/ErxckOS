@@ -5,6 +5,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class DeviceIntegrationTests(unittest.TestCase):
+    def test_installed_tool_configuration_expands_windows_paths(self):
+        import yaml
+        source = (ROOT / 'playbook/Configuration/features/erxckos/config.yml').read_text()
+        actions = dict((k.value, v) for k, v in yaml.compose(source).value)['actions'].value
+        scripts = ['Set-ErxckOSIdentity.ps1', 'Install-ErxckOSShortcut.ps1', 'Invoke-ErxckOS.ps1']
+        found = []
+        for action in actions:
+            fields = dict((k.value, v.value) for k, v in action.value)
+            for script in scripts:
+                if script in fields.get('command', '') or script in fields.get('args', ''):
+                    self.assertEqual(action.tag, '!cmd:')
+                    self.assertIn('powershell.exe -NoProfile', fields['command'])
+                    self.assertIn('"%ProgramFiles%\\ErxckOS Tool\\Scripts\\' + script + '"', fields['command'])
+                    self.assertEqual(fields['runas'], 'currentUserElevated')
+                    found.append(script)
+        self.assertCountEqual(found, scripts)
+
     def test_installer_uses_elevated_user_and_persistent_log(self):
         import yaml
         source = (ROOT / 'playbook/Configuration/features/erxckos/software.yml').read_text()

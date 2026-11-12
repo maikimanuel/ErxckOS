@@ -10,4 +10,6 @@ La prueba Python comprueba el contrato de ejecucion elevado y de log dentro de l
 
 Se usa !cmd con start /wait para expandir %ProgramData% dentro del usuario elevado y propagar el codigo del instalador. El !run elevado del codigo publico de AME consultado no expande esas variables en Arguments. La prueba Windows lee y ejecuta el comando real del YAML desde la carpeta del instalador; solo cambia /DIR para aislar la instalacion de prueba.
 
+Las tres acciones de configuracion de la tool tambien pasan por !cmd para expandir %ProgramFiles% antes de llamar a PowerShell. Mantienen sus mismos scripts, argumentos y usuario elevado. No se ejecutan esos tweaks en las pruebas.
+
 Limite: el codigo 4 por si solo no identifica el motivo interno. Este cambio corrige la diferencia de contexto identificada y mejora el diagnostico; hace falta comprobar la siguiente ejecucion real con AME. Si falla, obtener ErxckOS-Setup.log ademas de Log.yml y Output.txt.
