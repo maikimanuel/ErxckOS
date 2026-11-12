@@ -34,7 +34,9 @@ try {
  foreach ($folder in @([Environment]::GetFolderPath('CommonDesktopDirectory'),[Environment]::GetFolderPath('CommonPrograms'))) {
   $path=Join-Path $folder 'ErxckOS Tool.lnk'
   if (-not (Test-Path $path)) { throw "Falta acceso directo $path." }
-  if ($shell.CreateShortcut($path).TargetPath -ne $exe) { throw 'El acceso directo no apunta al EXE.' }
+  $actualTarget=$shell.CreateShortcut($path).TargetPath
+  Write-Output "Acceso: $path; destino: $actualTarget; esperado: $exe"
+  if ($actualTarget -ne $exe) { throw "El acceso directo no apunta al EXE. Actual: $actualTarget. Esperado: $exe." }
  }
  # Reproduce a legacy per-user shortcut, then exercise the AME migration helper.
  $legacy=Join-Path ([Environment]::GetFolderPath('Programs')) 'ErxckOS Tool.lnk'
