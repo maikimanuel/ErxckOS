@@ -16,7 +16,7 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
  <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="222"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
   <Border Grid.Column="0" Background="#121116" BorderBrush="#242129" BorderThickness="0,0,1,0">
    <Grid Margin="23,24"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-    <StackPanel><Image x:Name="Logo" Height="92" Stretch="Uniform" Margin="0,0,0,10"/><TextBlock Text="ErxckOS" FontSize="27" FontWeight="Bold" HorizontalAlignment="Center"/><TextBlock x:Name="VersionLabel" Text="UTILITY / 0.3.0" Foreground="#A68A94" FontSize="10" HorizontalAlignment="Center" Margin="0,7,0,36"/></StackPanel>
+    <StackPanel><Image x:Name="Logo" Height="92" Stretch="Uniform" Margin="0,0,0,10"/><TextBlock Text="ErxckOS" FontSize="27" FontWeight="Bold" HorizontalAlignment="Center"/><TextBlock x:Name="VersionLabel" Text="UTILITY / 0.4.0" Foreground="#A68A94" FontSize="10" HorizontalAlignment="Center" Margin="0,7,0,36"/></StackPanel>
     <StackPanel Grid.Row="1"><Button x:Name="ToolsNav" Content="Tools" HorizontalContentAlignment="Left" Margin="0,0,0,10"/><Button x:Name="TweaksNav" Content="Tweaking" Background="#242029" HorizontalContentAlignment="Left" Margin="0"/></StackPanel>
     <StackPanel Grid.Row="3"><TextBlock Text="Tu sistema. Tu estilo." Foreground="#B59DA6" FontSize="12"/><TextBlock Text="ErxckOS Tool" Foreground="#6E5D65" FontSize="11" Margin="0,5,0,0"/></StackPanel>
    </Grid>

@@ -71,15 +71,15 @@ actions:
     runas: currentUserElevated
     wait: true
 
+  # Refresh shortcuts created by versions before the EXE installer.
+  - !run:
+    exe: 'PowerShell'
+    args: '-NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Install-ErxckOSShortcut.ps1"'
+    runas: currentUserElevated
+    wait: true
   - !writeStatus: {status: 'Detectando perfil laptop / PC'}
   - !run:
     exe: 'PowerShell'
     args: '-NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Invoke-ErxckOS.ps1" -Action AutoPower'
-    runas: currentUserElevated
-    wait: true
-
-  - !run:
-    exe: 'PowerShell'
-    args: '-NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Install-ErxckOSShortcut.ps1"'
     runas: currentUserElevated
     wait: true

@@ -30,6 +30,12 @@ jobs:
         run: ./tests/device-profile.tests.ps1
       - name: Pruebas de empaquetado
         run: python -m unittest discover -s tests -v
+      - name: Compilar EXE e instalador
+        shell: powershell
+        run: ./scripts/build-installer.ps1 -Repository "${{ github.repository }}"
+      - name: Probar instalacion y desinstalacion sin aplicar tweaks
+        shell: powershell
+        run: ./tests/installer-smoke.ps1 -Repository "${{ github.repository }}"
       - name: Empaquetar
         run: python build.py --repository "${{ github.repository }}" --output dist
       - uses: actions/upload-artifact@v4
@@ -56,5 +62,5 @@ jobs:
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" dist/* --clobber
           else
-            gh release create "$RELEASE_TAG" dist/* --verify-tag --prerelease --title "ErxckOS $RELEASE_TAG" --notes "Version de prueba. Incluye perfiles laptop/PC y actualizaciones desde este repositorio. Consulta README y VALIDACION.md. Los ajustes y la interfaz requieren pruebas reales en Windows."
+            gh release create "$RELEASE_TAG" dist/* --verify-tag --prerelease --title "ErxckOS $RELEASE_TAG" --notes "Version de prueba. El APBX contiene ErxckOS-Setup.exe e instala ErxckOS Tool con acceso a ErxckOS.exe. No requiere ZIP aparte. Consulta README y VALIDACION.md. La interfaz y los ajustes requieren pruebas reales en Windows."
           fi

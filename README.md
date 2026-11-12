@@ -1,13 +1,15 @@
 # ErxckOS
 
 Playbook personalizado y primera base nativa de ErxckOS Tool para Windows.
-Version de pruebas **0.3.0**. No se ha ejecutado una instalacion completa ni la interfaz en Windows.
+Version de pruebas **0.4.0**. No se ha ejecutado una instalacion completa del playbook ni la interfaz en Windows.
 
 ## Uso
 
-- Playbook: abrir `ErxckOS.apbx` con AME Wizard. Incluye e instala ErxckOS Tool localmente.
-- App portable: extraer `ErxckOS-Tool.zip` y ejecutar `Start-ErxckOS.cmd`. Solicita permisos de administrador.
-- Esta entrega utiliza PowerShell 5.1 y WPF incluidos en Windows; no es un instalador EXE compilado.
+- Abre `ErxckOS.apbx` con AME Wizard. Dentro viene `ErxckOS-Setup.exe`, que instala la tool automaticamente, sin descargarla ni extraer un ZIP aparte.
+- Al terminar, abre **ErxckOS Tool** desde el escritorio o Inicio: el acceso directo ejecuta `ErxckOS.exe` y solicita permisos de administrador.
+- La instalacion registra la tool en las aplicaciones de Windows para poder desinstalarla. Desinstalarla elimina sus archivos; no revierte los tweaks aplicados.
+- El EXE es un lanzador Windows compilado; la interfaz conserva su motor PowerShell 5.1/WPF y sus archivos de recursos dentro de Program Files. No se ha reescrito la interfaz en C#.
+- El EXE y el instalador aun no tienen firma de editor.
 - Las modificaciones se ejecutan en la cuenta que eleva la app. Si introduces credenciales de otra cuenta, esa es la cuenta afectada por los ajustes de usuario.
 
 ## Contenido implementado
@@ -67,14 +69,14 @@ Los scripts heredados realizan cambios agresivos y necesitan pruebas sobre esas 
 
 ## Construir y publicar
 
-1. Instalar Python 3.12 y ejecutar `python -m pip install -r requirements.txt`.
+1. En Windows x64, instalar Python 3.12 e Inno Setup 6 y ejecutar `python -m pip install -r requirements.txt`.
 2. Ejecutar `python -m unittest discover -s tests -v` y `powershell -NoProfile -File tests/device-profile.tests.ps1`.
-3. Ejecutar `python build.py --repository maikimanuel/ErxckOS --output dist`.
+3. Ejecutar `powershell -NoProfile -File scripts/build-installer.ps1`, despues `powershell -NoProfile -File tests/installer-smoke.ps1` en un Windows de prueba. La prueba instala y desinstala la tool, sin ejecutar tweaks. Finalmente ejecutar `python build.py --repository maikimanuel/ErxckOS --output dist`.
 4. Subir el proyecto a `https://github.com/maikimanuel/ErxckOS`.
-5. Cambiar `VERSION`, crear una etiqueta `v0.3.0` (o la version correspondiente) y subirla.
+5. Cambiar `VERSION`, crear una etiqueta `v0.4.0` (o la version correspondiente) y subirla.
 
 GitHub Actions comprueba sintaxis y perfiles en Windows PowerShell 5.1, verifica que
-la etiqueta coincida con VERSION y empaqueta `ErxckOS.apbx` y `ErxckOS-Tool.zip`, genera hashes
+la etiqueta coincida con VERSION, compila/prueba el instalador y empaqueta `ErxckOS.apbx`, genera hashes
 y crea una publicacion de prueba. No ejecuta los tweaks en el runner.
 El empaquetador configura el repositorio real en el playbook y en la app.
 El boton de la app abre las publicaciones; descargar un playbook no lo ejecuta automaticamente.

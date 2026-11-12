@@ -35,6 +35,7 @@ Continuar los chats Revisión de ReviOS y Greeting exchange. Revisar y aprovecha
 
 ## Pendiente al escribir este registro
 
+- 0.4.0 en preparacion: instalador EXE dentro del APBX y lanzador ErxckOS.exe. Ver docs/EXE-INSTALLER.md. Falta validar compilacion/instalacion en CI y publicar.
 - Prueba real de WPF y aplicacion del playbook en Windows/VM. No declarar estable ni prometer FPS; no se ejecutaron ajustes en el equipo del usuario.
 
 ## Restricciones permanentes

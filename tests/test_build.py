@@ -1,6 +1,6 @@
 import importlib.util
 from pathlib import Path
-import tempfile,unittest,zipfile
+import tempfile,unittest,hashlib,json
 spec=importlib.util.spec_from_file_location('build',Path(__file__).resolve().parents[1]/'build.py')
 class ReleaseTests(unittest.TestCase):
  def load_builder(self):
@@ -15,7 +15,13 @@ class ReleaseTests(unittest.TestCase):
   mod=self.load_builder()
   import py7zr,xml.etree.ElementTree as ET,json
   with tempfile.TemporaryDirectory() as tmp:
-   files=mod.build(Path(tmp),'erxck/ErxckOS')
+   # Synthetic installer bytes exercise packaging only; Windows CI tests the real installer.
+   installer=Path(tmp)/'fixture-setup.exe';installer.write_bytes(b'MZ\x00test-installer-fixture')
+   installer.with_suffix('.json').write_text(json.dumps(dict(version=(Path(spec.origin).parent/'VERSION').read_text().strip(),repository='erxck/ErxckOS',sha256=hashlib.sha256(installer.read_bytes()).hexdigest())))
+   destination=Path(tmp)/'dist'
+   files=mod.build(destination,'erxck/ErxckOS',installer=installer)
+   self.assertEqual({p.name for p in files},{'ErxckOS.apbx','SHA256SUMS.txt'})
+   self.assertFalse(list(destination.glob('*.zip')))
    apbx=next(p for p in files if p.suffix=='.apbx')
    with py7zr.SevenZipFile(apbx,password='malte') as z:
     self.assertIn('playbook.conf',z.getnames());z.extractall(Path(tmp)/'unpacked')
@@ -24,12 +30,28 @@ class ReleaseTests(unittest.TestCase):
    self.assertEqual(root.findtext('Name'),'ErxckOS')
    software=(Path(tmp)/'unpacked/Configuration/features/erxckos/software.yml').read_text()
    self.assertNotIn('RevisionTool-Setup',software);self.assertNotIn('meetrevision',software)
-   app=next(p for p in files if p.suffix=='.zip')
-   with zipfile.ZipFile(app) as z:
-    config=json.loads(z.read('ErxckOS Tool/update-config.json'))
-    self.assertEqual(config['repository'],'erxck/ErxckOS')
-    self.assertIn('ErxckOS Tool/ErxckOS.ps1',z.namelist())
-    self.assertIn('ErxckOS Tool/Scripts/ErxckOS.Power.ps1',z.namelist())
-    self.assertEqual(config['version'],(Path(spec.origin).parent/'VERSION').read_text().strip())
-   self.assertTrue((Path(tmp)/'unpacked/Executables/ErxckOS Tool/Scripts/ErxckOS.Power.ps1').is_file())
+   embedded=Path(tmp)/'unpacked/Executables/ErxckOS-Setup.exe'
+   self.assertEqual(embedded.read_bytes(),installer.read_bytes())
+   self.assertNotIn('robocopy "ErxckOS Tool"',software)
+   self.assertIn("exe: 'ErxckOS-Setup.exe'",software)
+   self.assertIn('/VERYSILENT',software)
+   self.assertIn('wait: true',software)
+   sums=(destination/'SHA256SUMS.txt').read_text().splitlines()
+   self.assertEqual(sums,[hashlib.sha256(apbx.read_bytes()).hexdigest()+'  ErxckOS.apbx'])
+ def test_missing_installer_fails_before_packaging(self):
+  mod=self.load_builder()
+  with tempfile.TemporaryDirectory() as tmp:
+   with self.assertRaises(FileNotFoundError):
+    mod.build(Path(tmp)/'out','erxck/ErxckOS',installer=Path(tmp)/'missing.exe')
+   self.assertFalse((Path(tmp)/'out/ErxckOS.apbx').exists())
+ def test_stale_or_changed_installer_is_rejected(self):
+  mod=self.load_builder()
+  with tempfile.TemporaryDirectory() as tmp:
+   installer=Path(tmp)/'setup.exe';installer.write_bytes(b'MZ\x00fixture')
+   valid=dict(version=(Path(spec.origin).parent/'VERSION').read_text().strip(),repository='erxck/ErxckOS',sha256=hashlib.sha256(installer.read_bytes()).hexdigest())
+   for field,value in [('version','0.0.1'),('repository','other/repo'),('sha256','0'*64)]:
+    with self.subTest(field=field):
+     metadata=dict(valid);metadata[field]=value
+     installer.with_suffix('.json').write_text(json.dumps(metadata))
+     with self.assertRaises(ValueError):mod.build(Path(tmp)/'out','erxck/ErxckOS',installer=installer)
 if __name__=='__main__':unittest.main()

@@ -1,4 +1,11 @@
-# Validacion 0.3.0
+# Validacion 0.4.0
+
+- Local: 6 pruebas Python aprobadas, 22 comprobaciones de perfiles y analizador de 9 scripts PowerShell.
+- El test Python usa bytes sinteticos como fixture del instalador exclusivamente para comprobar el contenido y los hashes del APBX; no prueba la ejecucion del EXE.
+- La prueba real de Windows `tests/installer-smoke.ps1` instala dos veces en una ruta con espacios, comprueba archivos/version/licencias/accesos/registro de desinstalacion, ejecuta solo el diagnostico del lanzador y desinstala. El diagnostico no ejecuta PowerShell ni tweaks.
+- La compilacion del lanzador C# y del instalador Inno Setup y la prueba real del instalador se verifican en GitHub Actions antes de publicar.
+
+## Historial
 
 - Base 0.2.0: dos pruebas Python de empaquetado, sin instalacion completa en Windows.
 - 0.3.0: 22 comprobaciones de perfiles ejecutadas con CIM/powercfg sustituidos; nunca se ejecutan tweaks durante esos tests.

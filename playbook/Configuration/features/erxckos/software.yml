@@ -5,9 +5,12 @@ privilege: TrustedInstaller
 actions:
 
   - !writeStatus: {status: 'Instalando ErxckOS Tool'}
-  - !cmd:
+  - !run:
     exeDir: true
-    command: 'robocopy "ErxckOS Tool" "%ProgramFiles%\ErxckOS Tool" /E /IM /IT /NP & if errorlevel 8 (exit /b 1) else (exit /b 0)'
+    exe: 'ErxckOS-Setup.exe'
+    args: '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-'
+    wait: true
+    handleExitCodes: {'!0': halt}
   - !run:
     path: '%ProgramFiles%\ErxckOS Tool\Scripts'
     exe: 'ErxckOS.Security.Disable.cmd'

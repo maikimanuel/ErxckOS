@@ -1,6 +1,6 @@
 """Build ErxckOS release files without executing any Windows changes."""
 from pathlib import Path
-import argparse,hashlib,json,re,shutil,tempfile,xml.etree.ElementTree as ET,zipfile
+import argparse,hashlib,json,re,shutil,tempfile,xml.etree.ElementTree as ET
 import py7zr,yaml
 ROOT=Path(__file__).resolve().parent
 
@@ -26,18 +26,24 @@ def validate_playbook(root):
         if 'RevisionTool-Setup' in text or 'meetrevision/revision-tool' in text:
             raise ValueError('Dependencia externa no eliminada')
 
-def build(destination,repository=None):
+def build(destination,repository=None,installer=None):
     if repository:validate_repository(repository)
-    destination=Path(destination);destination.mkdir(parents=True,exist_ok=True)
+    installer=Path(installer) if installer else ROOT/'build/windows/ErxckOS-Setup.exe'
+    if not installer.is_file():
+        raise FileNotFoundError('Compila primero el instalador con scripts/build-installer.ps1: '+str(installer))
     version=(ROOT/'VERSION').read_text().strip()
+    metadata=json.loads(installer.with_suffix('.json').read_text(encoding='utf-8-sig'))
+    if repository is None:repository=metadata['repository']
+    validate_repository(repository)
+    if metadata.get('version')!=version or metadata.get('repository')!=repository:
+        raise ValueError('El instalador no corresponde a esta version/repositorio; vuelve a compilarlo.')
+    if metadata.get('sha256')!=hashlib.sha256(installer.read_bytes()).hexdigest():
+        raise ValueError('El instalador no coincide con sus metadatos; vuelve a compilarlo.')
+    destination=Path(destination);destination.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory() as temp:
-        staging=Path(temp);pb=staging/'playbook';app=staging/'app'
-        shutil.copytree(ROOT/'playbook',pb);shutil.copytree(ROOT/'app',app)
-        for target in [app/'licenses',pb/'Executables/ErxckOS Tool/licenses']:
-            shutil.copytree(ROOT/'licenses',target,dirs_exist_ok=True)
-        config={'repository':repository,'version':version}
-        (app/'update-config.json').write_text(json.dumps(config,indent=2),encoding='utf-8')
-        shutil.copytree(app,pb/'Executables/ErxckOS Tool',dirs_exist_ok=True)
+        staging=Path(temp);pb=staging/'playbook'
+        shutil.copytree(ROOT/'playbook',pb)
+        shutil.copy2(installer,pb/'Executables/ErxckOS-Setup.exe')
         doc=ET.parse(pb/'playbook.conf');root=doc.getroot();root.find('Version').text=version
         for tag in ['Git','Website','DonateLink','ProductCode']:
             for elem in list(root.findall(tag)):root.remove(elem)
@@ -52,16 +58,14 @@ def build(destination,repository=None):
         with py7zr.SevenZipFile(apbx,'w',password='malte',header_encryption=True) as archive:
             for file in sorted(pb.rglob('*')):
                 if file.is_file():archive.write(file,file.relative_to(pb).as_posix())
-        zip_path=destination/'ErxckOS-Tool.zip'
-        with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as archive:
-            for file in sorted(app.rglob('*')):
-                if file.is_file():archive.write(file,'ErxckOS Tool/'+file.relative_to(app).as_posix())
-        files=[apbx,zip_path]
+        files=[apbx]
+        # Retire the previous generated portable artifact when reusing dist.
+        (destination/'ErxckOS-Tool.zip').unlink(missing_ok=True)
         sums=destination/'SHA256SUMS.txt'
         sums.write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in files),encoding='utf-8')
         return files+[sums]
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--repository');parser.add_argument('--output',default='dist')
+    parser=argparse.ArgumentParser();parser.add_argument('--repository');parser.add_argument('--output',default='dist');parser.add_argument('--installer')
     options=parser.parse_args()
-    for result in build(Path(options.output),options.repository):print(result)
+    for result in build(Path(options.output),options.repository,options.installer):print(result)
