@@ -12,7 +12,7 @@ class DeviceIntegrationTests(unittest.TestCase):
         for action in document['actions'].value:
             fields = dict((key.value, value.value) for key, value in action.value)
             if 'ErxckOS-Setup.exe' in fields.get('command', ''):
-                self.assertEqual(action.tag, '!cmd')
+                self.assertEqual(action.tag, '!cmd:')
                 self.assertEqual(fields.get('runas'), 'currentUserElevated')
                 self.assertIn('start "" /wait "ErxckOS-Setup.exe"', fields['command'])
                 self.assertIn('/LOG="%ProgramData%\\ErxckOS-Setup.log"', fields['command'])
