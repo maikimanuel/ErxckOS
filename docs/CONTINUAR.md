@@ -35,7 +35,9 @@ Continuar los chats Revisión de ReviOS y Greeting exchange. Revisar y aprovecha
 
 ## Pendiente al escribir este registro
 
-- 0.4.0 en preparacion: instalador EXE dentro del APBX y lanzador ErxckOS.exe. Ver docs/EXE-INSTALLER.md. Falta validar compilacion/instalacion en CI y publicar.
+- 0.4.0 construida y comprobada en Windows: https://github.com/maikimanuel/ErxckOS/actions/runs/43126452001 (commit 82657b36e512015082281b7a4d5a528bb2deb303). Pasaron compilacion, instalacion/reinstalacion, migracion de accesos, diagnostico sin ejecutar tweaks, desinstalacion y empaquetado.
+- Artefacto ErxckOS-build id 13902584892. El APBX se descargo y verifico: SHA256 5c444969ed3121604e9bd7f339304bfc3d421a8f86188505f891e28ae7430c2a. Contiene Executables/ErxckOS-Setup.exe (6041342 bytes), version 0.4.0 y llamada AME local silenciosa.
+- Entrega privada: ErxckOS-v0.4.0.apbx. La etiqueta/publicacion publica v0.4.0 NO se ha creado: la revision automatica bloqueo la accion y requiere autorizacion explicita del usuario. No reintentar mediante otra via sin esa autorizacion.
 - Prueba real de WPF y aplicacion del playbook en Windows/VM. No declarar estable ni prometer FPS; no se ejecutaron ajustes en el equipo del usuario.
 
 ## Restricciones permanentes
