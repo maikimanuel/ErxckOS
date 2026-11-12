@@ -1,7 +1,7 @@
 # ErxckOS
 
 Playbook personalizado y primera base nativa de ErxckOS Tool para Windows.
-Version de pruebas **0.4.0**. No se ha ejecutado una instalacion completa del playbook ni la interfaz en Windows.
+Version de pruebas **0.4.1**. No se ha ejecutado una instalacion completa del playbook ni la interfaz en Windows.
 
 ## Uso
 
@@ -73,7 +73,7 @@ Los scripts heredados realizan cambios agresivos y necesitan pruebas sobre esas 
 2. Ejecutar `python -m unittest discover -s tests -v` y `powershell -NoProfile -File tests/device-profile.tests.ps1`.
 3. Ejecutar `powershell -NoProfile -File scripts/build-installer.ps1`, despues `powershell -NoProfile -File tests/installer-smoke.ps1` en un Windows de prueba. La prueba instala y desinstala la tool, sin ejecutar tweaks. Finalmente ejecutar `python build.py --repository maikimanuel/ErxckOS --output dist`.
 4. Subir el proyecto a `https://github.com/maikimanuel/ErxckOS`.
-5. Cambiar `VERSION`, crear una etiqueta `v0.4.0` (o la version correspondiente) y subirla.
+5. Cambiar `VERSION`, crear una etiqueta `v0.4.1` (o la version correspondiente) y subirla.
 
 GitHub Actions comprueba sintaxis y perfiles en Windows PowerShell 5.1, verifica que
 la etiqueta coincida con VERSION, compila/prueba el instalador y empaqueta `ErxckOS.apbx`, genera hashes

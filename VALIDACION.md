@@ -1,6 +1,6 @@
-# Validacion 0.4.0
+# Validacion 0.4.1
 
-- Local: 6 pruebas Python aprobadas, 22 comprobaciones de perfiles y analizador de 9 scripts PowerShell.
+- Local: 7 pruebas Python aprobadas, 22 comprobaciones de perfiles y analizador de 9 scripts PowerShell.
 - El test Python usa bytes sinteticos como fixture del instalador exclusivamente para comprobar el contenido y los hashes del APBX; no prueba la ejecucion del EXE.
 - La prueba real de Windows `tests/installer-smoke.ps1` instala dos veces en una ruta con espacios, comprueba archivos/version/licencias/accesos/registro de desinstalacion, ejecuta solo el diagnostico del lanzador y desinstala. El diagnostico no ejecuta PowerShell ni tweaks.
 - La compilacion del lanzador C# y del instalador Inno Setup y la prueba real del instalador se verifican en GitHub Actions antes de publicar.
@@ -17,3 +17,7 @@
 No se ha ejecutado la interfaz WPF ni aplicado el playbook completo en Windows. No se midieron FPS, latencia, temperatura o bateria. Las pruebas con fronteras simuladas verifican la logica, no la respuesta de todos los dispositivos o versiones de Windows. Los ajustes heredados requieren pruebas propias.
 
 El perfil Laptop conserva los valores existentes cuando se crea por primera vez. No restaura configuraciones perdidas por versiones anteriores. Ante un fallo se intenta recuperar el esquema activo previo, sin prometer revertir parametros ya escritos en un esquema existente.
+
+## Integracion AME 0.4.1
+
+Se incorpora una prueba del usuario elevado y del log del instalador. Ver docs/INSTALLER-0.4.1.md; la ejecucion real de AME en el equipo que reporto el fallo sigue pendiente.

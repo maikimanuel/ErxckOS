@@ -33,7 +33,7 @@ class ReleaseTests(unittest.TestCase):
    embedded=Path(tmp)/'unpacked/Executables/ErxckOS-Setup.exe'
    self.assertEqual(embedded.read_bytes(),installer.read_bytes())
    self.assertNotIn('robocopy "ErxckOS Tool"',software)
-   self.assertIn("exe: 'ErxckOS-Setup.exe'",software)
+   self.assertIn('start "" /wait "ErxckOS-Setup.exe"',software)
    self.assertIn('/VERYSILENT',software)
    self.assertIn('wait: true',software)
    sums=(destination/'SHA256SUMS.txt').read_text().splitlines()

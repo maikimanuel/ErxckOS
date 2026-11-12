@@ -5,6 +5,18 @@ $root=Split-Path $PSScriptRoot -Parent
 $installerPath=(Resolve-Path $Installer).Path
 $install=Join-Path $env:TEMP ('ErxckOS prueba con espacios '+[guid]::NewGuid().ToString('N'))
 $uninstall=Join-Path $install 'unins000.exe'
+$setupLog=Join-Path $env:ProgramData 'ErxckOS-Setup.log'
+$software=Join-Path $root 'playbook/Configuration/features/erxckos/software.yml'
+$installerCommand=& python -c @'
+import sys,yaml,pathlib
+doc=dict((k.value,v) for k,v in yaml.compose(pathlib.Path(sys.argv[1]).read_text()).value)
+for action in doc['actions'].value:
+ fields=dict((k.value,v.value) for k,v in action.value)
+ if 'ErxckOS-Setup.exe' in fields.get('command',''):
+  print(fields['command']);break
+else: raise SystemExit('No AME installer command')
+'@ $software
+if ($LASTEXITCODE -ne 0 -or -not $installerCommand) { throw 'No se pudo leer el comando AME del instalador.' }
 $key='HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{A50F47EF-91BC-4A82-9C46-4010CE60C7CC}_is1'
 Add-Type @'
 using System.Runtime.InteropServices;
@@ -20,14 +32,19 @@ function Get-LongPath([string]$Path) {
  if ($length -eq 0 -or $length -ge 32768) { throw "No se pudo normalizar la ruta: $Path" }
  return $buffer.ToString()
 }
-function Run-Checked([string]$File,[string]$Arguments,[int]$Expected=0) {
- $process=Start-Process -FilePath $File -ArgumentList $Arguments -Wait -PassThru
+function Run-Checked([string]$File,[string]$Arguments,[int]$Expected=0,[string]$WorkingDirectory='') {
+ $options=@{FilePath=$File;ArgumentList=$Arguments;Wait=$true;PassThru=$true}
+ if ($WorkingDirectory) { $options.WorkingDirectory=$WorkingDirectory }
+ $process=Start-Process @options
  if ($process.ExitCode -ne $Expected) { throw "Codigo inesperado $($process.ExitCode) al ejecutar $File; se esperaba $Expected." }
 }
 try {
  # Installing the tool writes application files and shortcuts; it never applies tweaks.
  foreach ($attempt in 1..2) {
-  Run-Checked $installerPath ('/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR="'+$install+'"')
+  Remove-Item $setupLog -ErrorAction SilentlyContinue
+  # Exercise the actual cmd command from AME, overriding only the test install path.
+  Run-Checked "$env:SystemRoot\System32\cmd.exe" ('/C '+$installerCommand+' /DIR="'+$install+'"') 0 (Split-Path $installerPath -Parent)
+  if (-not (Test-Path $setupLog) -or (Get-Item $setupLog).Length -eq 0) { throw 'El instalador no creo su registro de diagnostico.' }
  }
  # TEMP may use RUNNER~1 while Windows shortcuts expand it to runneradmin.
  # Compare canonical long paths to avoid treating those aliases as different files.

@@ -5,6 +5,24 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class DeviceIntegrationTests(unittest.TestCase):
+    def test_installer_uses_elevated_user_and_persistent_log(self):
+        import yaml
+        source = (ROOT / 'playbook/Configuration/features/erxckos/software.yml').read_text()
+        document = dict((key.value, value) for key, value in yaml.compose(source).value)
+        for action in document['actions'].value:
+            fields = dict((key.value, value.value) for key, value in action.value)
+            if 'ErxckOS-Setup.exe' in fields.get('command', ''):
+                self.assertEqual(action.tag, '!cmd')
+                self.assertEqual(fields.get('runas'), 'currentUserElevated')
+                self.assertIn('start "" /wait "ErxckOS-Setup.exe"', fields['command'])
+                self.assertIn('/LOG="%ProgramData%\\ErxckOS-Setup.log"', fields['command'])
+                self.assertEqual(fields['wait'], 'true')
+                codes = dict((k.value, v.value) for k, v in fields['handleExitCodes'])
+                self.assertEqual(codes['!0'], 'halt')
+                break
+        else:
+            self.fail('Falta el instalador integrado en las acciones de AME.')
+
     def test_playbook_does_not_override_portable_power_policy(self):
         finalize = (ROOT / 'playbook/Executables/FINALIZE.cmd').read_text()
         self.assertNotIn('powercfg /hibernate off', finalize)

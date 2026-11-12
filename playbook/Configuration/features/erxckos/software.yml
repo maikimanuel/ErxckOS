@@ -5,10 +5,10 @@ privilege: TrustedInstaller
 actions:
 
   - !writeStatus: {status: 'Instalando ErxckOS Tool'}
-  - !run:
+  - !cmd:
     exeDir: true
-    exe: 'ErxckOS-Setup.exe'
-    args: '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-'
+    command: 'start "" /wait "ErxckOS-Setup.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /LOG="%ProgramData%\ErxckOS-Setup.log"'
+    runas: currentUserElevated
     wait: true
     handleExitCodes: {'!0': halt}
   - !run:
