@@ -6,6 +6,20 @@ $installerPath=(Resolve-Path $Installer).Path
 $install=Join-Path $env:TEMP ('ErxckOS prueba con espacios '+[guid]::NewGuid().ToString('N'))
 $uninstall=Join-Path $install 'unins000.exe'
 $key='HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{A50F47EF-91BC-4A82-9C46-4010CE60C7CC}_is1'
+Add-Type @'
+using System.Runtime.InteropServices;
+using System.Text;
+public static class InstallerSmokePaths {
+ [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
+ public static extern uint GetLongPathName(string path, StringBuilder result, uint capacity);
+}
+'@
+function Get-LongPath([string]$Path) {
+ $buffer=New-Object Text.StringBuilder 32768
+ $length=[InstallerSmokePaths]::GetLongPathName($Path,$buffer,32768)
+ if ($length -eq 0 -or $length -ge 32768) { throw "No se pudo normalizar la ruta: $Path" }
+ return $buffer.ToString()
+}
 function Run-Checked([string]$File,[string]$Arguments,[int]$Expected=0) {
  $process=Start-Process -FilePath $File -ArgumentList $Arguments -Wait -PassThru
  if ($process.ExitCode -ne $Expected) { throw "Codigo inesperado $($process.ExitCode) al ejecutar $File; se esperaba $Expected." }
@@ -15,6 +29,9 @@ try {
  foreach ($attempt in 1..2) {
   Run-Checked $installerPath ('/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR="'+$install+'"')
  }
+ # TEMP may use RUNNER~1 while Windows shortcuts expand it to runneradmin.
+ # Compare canonical long paths to avoid treating those aliases as different files.
+ $install=Get-LongPath $install
  $exe=Join-Path $install 'ErxckOS.exe'
  $version=(Get-Content (Join-Path $root 'VERSION') -Raw).Trim()
  if ((Get-Item $exe).VersionInfo.FileVersion -ne "$version.0") { throw 'Version del EXE incorrecta.' }
