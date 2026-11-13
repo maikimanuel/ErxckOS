@@ -73,7 +73,11 @@ try {
    if (-not $winget) { throw 'Se necesita App Installer (winget) para instalar navegadores.' }
    Native $winget.Source @('install','--id',$ids[$Action],'--exact','--source','winget','--accept-package-agreements','--accept-source-agreements','--disable-interactivity')
   }
-  'Branding' { & (Join-Path $PSScriptRoot 'Set-ErxckOSIdentity.ps1') }
+  'Branding' {
+   & (Join-Path $PSScriptRoot 'Set-ErxckOSIdentity.ps1')
+   & (Join-Path $PSScriptRoot 'Set-ErxckOSVolumeLabel.ps1')
+   $actionMessage = 'Identidad aplicada. La unidad de Windows se llama ErxckOS.'
+  }
  }
  $result=@{ok=$true;message=$actionMessage;action=$Action}
  $exitCode=0

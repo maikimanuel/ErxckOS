@@ -70,6 +70,12 @@ actions:
     runas: currentUserElevated
     wait: true
 
+  - !writeStatus: {status: 'Nombrando unidad de Windows ErxckOS'}
+  - !cmd:
+    command: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Set-ErxckOSVolumeLabel.ps1"'
+    runas: currentUserElevated
+    wait: true
+
   # Refresh shortcuts created by versions before the EXE installer.
   - !cmd:
     command: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ProgramFiles%\ErxckOS Tool\Scripts\Install-ErxckOSShortcut.ps1"'

@@ -30,6 +30,9 @@ jobs:
         run: ./tests/device-profile.tests.ps1
       - name: Pruebas de empaquetado
         run: python -m unittest discover -s tests -v
+      - name: Probar etiqueta de la unidad de Windows
+        shell: powershell
+        run: ./tests/volume-label.tests.ps1
       - name: Diagnostico de seguridad y auxiliar sin modificar servicios
         shell: powershell
         run: ./tests/security-repair-smoke.ps1
