@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $failed = $false
 $count = 0
-Get-ChildItem (Join-Path $root 'app'),(Join-Path $root 'tests'),(Join-Path $root 'scripts') -Recurse -Filter *.ps1 | ForEach-Object {
+Get-ChildItem (Join-Path $root 'app'),(Join-Path $root 'tests'),(Join-Path $root 'scripts'),(Join-Path $root 'support') -Recurse -Filter *.ps1 | ForEach-Object {
     $tokens = $null; $errors = $null
     [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors)
     $count++

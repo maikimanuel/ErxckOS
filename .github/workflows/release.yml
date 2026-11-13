@@ -30,6 +30,9 @@ jobs:
         run: ./tests/device-profile.tests.ps1
       - name: Pruebas de empaquetado
         run: python -m unittest discover -s tests -v
+      - name: Diagnostico de seguridad y auxiliar sin modificar servicios
+        shell: powershell
+        run: ./tests/security-repair-smoke.ps1
       - name: Compilar EXE e instalador
         shell: powershell
         run: ./scripts/build-installer.ps1 -Repository "${{ github.repository }}"

@@ -35,7 +35,6 @@ features:
   - features\erxckos\registry\disable-installing-teams.yml
   - features\erxckos\registry\disable-logging.yml
   - features\erxckos\registry\disable-prefetcher-superfetch-and-readyboost.yml
-  - features\erxckos\registry\disable-system-restore-pre-defined-config.yml
   # - features\erxckos\registry\disable-user-account-control-uac.yml
   - features\erxckos\registry\enable-audio-communications-do-nothing.yml
   - features\erxckos\registry\fixes.yml

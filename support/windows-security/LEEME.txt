@@ -1,0 +1,23 @@
+REPARACION LIMITADA DE SEGURIDAD DE WINDOWS
+
+1. Extrae TODO el ZIP en una carpeta local de tu PC.
+2. Ejecuta REPARAR.cmd y acepta la solicitud de administrador.
+3. Revisa el resultado. Solo si confirma ambos servicios restaurados, reinicia.
+4. Abre Seguridad de Windows y comprueba la pagina.
+5. Si falla o sigue bloqueada, envia la carpeta Resultados generada junto al script.
+
+La reparacion intenta restaurar solo Start=3 para SecurityHealthService y Start=2
+para wscsvc. Guarda antes una copia de las claves y comprueba el resultado.
+Usa el auxiliar MinSudo/NanaRun incluido en ErxckOS, sin descargar herramientas.
+No modifica propietarios ni permisos, no desactiva protecciones, no altera
+WinDefend ni crea tareas de arranque. No reinicia automaticamente.
+
+La reparacion aun no se ha ejecutado en tu equipo. No garantiza solucionar
+politicas adicionales, componentes eliminados o un problema distinto.
+SOLO_DIAGNOSTICO.cmd consulta y guarda informacion sin modificar los servicios.
+
+Los .reg guardados son respaldo del estado previo, que puede estar deshabilitado;
+NO los importes para intentar reparar Windows.
+
+Los registros quedan localmente; nada se envia automaticamente.
+Licencia del auxiliar: Elevacion-LICENSE.txt.

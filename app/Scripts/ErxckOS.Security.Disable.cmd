@@ -4,16 +4,13 @@ set "services=HKLM\SYSTEM\ControlSet001\Services"
 reg add "%services%\MsSecCore" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\MsSecFlt" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\MsSecWfp" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
-reg add "%services%\SecurityHealthService" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\Sense" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\WdBoot" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\WdFilter" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\WdNisDrv" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\WdNisSvc" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\WinDefend" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
-reg add "%services%\wscsvc" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 ::WindowsSystemTray
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /f >NUL 2>nul
 ::System Guard
 reg add "%services%\SgrmAgent" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul
 reg add "%services%\SgrmBroker" /v "Start" /t REG_DWORD /d "4" /f >NUL 2>nul

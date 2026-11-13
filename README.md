@@ -1,7 +1,7 @@
 # ErxckOS
 
 Playbook personalizado y primera base nativa de ErxckOS Tool para Windows.
-Version de pruebas **0.4.1**. No se ha ejecutado una instalacion completa del playbook ni la interfaz en Windows.
+Version de pruebas **0.4.2**. No se ha ejecutado una instalacion completa del playbook ni la interfaz en Windows.
 
 ## Uso
 
@@ -73,7 +73,7 @@ Los scripts heredados realizan cambios agresivos y necesitan pruebas sobre esas 
 2. Ejecutar `python -m unittest discover -s tests -v` y `powershell -NoProfile -File tests/device-profile.tests.ps1`.
 3. Ejecutar `powershell -NoProfile -File scripts/build-installer.ps1`, despues `powershell -NoProfile -File tests/installer-smoke.ps1` en un Windows de prueba. La prueba instala y desinstala la tool, sin ejecutar tweaks. Finalmente ejecutar `python build.py --repository maikimanuel/ErxckOS --output dist`.
 4. Subir el proyecto a `https://github.com/maikimanuel/ErxckOS`.
-5. Cambiar `VERSION`, crear una etiqueta `v0.4.1` (o la version correspondiente) y subirla.
+5. Cambiar `VERSION`, crear una etiqueta `v0.4.2` (o la version correspondiente) y subirla.
 
 GitHub Actions comprueba sintaxis y perfiles en Windows PowerShell 5.1, verifica que
 la etiqueta coincida con VERSION, compila/prueba el instalador y empaqueta `ErxckOS.apbx`, genera hashes
@@ -91,3 +91,7 @@ y componentes reutilizados en `licenses`, junto con sus scripts fuente. Consulta
 ## Continuar el trabajo
 
 Consulta [docs/CONTINUAR.md](docs/CONTINUAR.md) para el estado verificado y los pendientes.
+
+## Seguridad y reparacion 0.4.2
+
+El playbook deja de ejecutar automaticamente SecurityOff y conserva los servicios de la interfaz, SecHealthUI y la configuracion existente de Restaurar sistema. Para reparar el caso observado sin reaplicar todo el playbook, consulta support/windows-security/LEEME.txt y docs/SECURITY-0.4.2.md. La solucion debe comprobarse en el equipo afectado.

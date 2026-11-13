@@ -11,12 +11,6 @@ actions:
     runas: currentUserElevated
     wait: true
     handleExitCodes: {'!0': halt}
-  - !run:
-    path: '%ProgramFiles%\ErxckOS Tool\Scripts'
-    exe: 'ErxckOS.Security.Disable.cmd'
-    wait: true
-    weight: 100
-
   - !powerShell:
     command: 'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(''https://community.chocolatey.org/install.ps1''))'
     weight: 50
