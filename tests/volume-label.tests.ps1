@@ -1,26 +1,27 @@
 $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path (Split-Path $PSScriptRoot -Parent) 'app/Scripts/Set-ErxckOSVolumeLabel.ps1'
 $originalDrive = $env:SystemDrive
-$script:labels = @{ C = 'Datos'; D = 'Windows' }
-$script:changes = 0
+$state = @{ Labels = @{ C = 'Datos'; D = 'Windows' }; Changes = 0 }
 
-function Get-Volume([char]$DriveLetter) {
-    [pscustomobject]@{ FileSystemLabel = $script:labels[[string]$DriveLetter] }
-}
+${function:Get-Volume} = {
+    param([char]$DriveLetter)
+    [pscustomobject]@{ FileSystemLabel = $state.Labels[[string]$DriveLetter] }
+}.GetNewClosure()
 
-function Set-Volume([char]$DriveLetter, [string]$NewFileSystemLabel) {
-    $script:labels[[string]$DriveLetter] = $NewFileSystemLabel
-    $script:changes++
-}
+${function:Set-Volume} = {
+    param([char]$DriveLetter, [string]$NewFileSystemLabel)
+    $state.Labels[[string]$DriveLetter] = $NewFileSystemLabel
+    $state.Changes++
+}.GetNewClosure()
 
 try {
     $env:SystemDrive = 'D:'
     & $scriptPath | Out-Null
-    if ($script:labels.D -cne 'ErxckOS' -or $script:labels.C -cne 'Datos' -or $script:changes -ne 1) {
+    if ($state.Labels.D -cne 'ErxckOS' -or $state.Labels.C -cne 'Datos' -or $state.Changes -ne 1) {
         throw 'Debe cambiar solamente la etiqueta de la unidad de Windows.'
     }
     & $scriptPath | Out-Null
-    if ($script:changes -ne 1) { throw 'La etiqueta correcta no se debe escribir de nuevo.' }
+    if ($state.Changes -ne 1) { throw 'La etiqueta correcta no se debe escribir de nuevo.' }
 } finally {
     $env:SystemDrive = $originalDrive
 }
